@@ -78,22 +78,24 @@
     </div>
 
 
-    <div class="container my-3">
-        <div class="row">
-            <div class="col-md-8 col-lg-9">
-                <h1>Blog</h1>
+ {% extends 'blog/base.html' %}
+
+
+{% block main_area %}
+     <h1>Blog</h1>
 
                 {% for p in post_list %}
                 <!-- Blog Post -->
                 <div class="card mb-4">
                     {% if p.head_image %}
-                        <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head im-age">
+                        <img class="card-img-top" src="{{ p.head_image.url }}" alt="Card image cap">
                     {% else %}
-                         <img class="card-img-top" src="https://pixabay.com/photos/fish-underwater-corals-sea-ocean-378286/" alt="random_image">
+                        <img class="card-img-top" src="/media/blog/images/2023/03/28/IMG_7011_SnIslMv.jpg">
                     {% endif %}
                     <div class="card-body">
                         <h2 class="card-title">{{ p.title}}</h2>
                         <p class="card-text">{{ p.content | truncatewords:30 }}</p>
+
                         <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
                     </div>
                     <div class="card-footer text-muted">
@@ -113,10 +115,7 @@
                         <a class="page-link" href="#">Newer &rarr;</a>
                     </li>
                 </ul>
-
-            </div>
-
-            <div class="col-md-4 col-lg-3">
+{% endblock %}
                 <!-- Search Widget -->
                 <div class="card my-4">
                     <h5 class="card-header">Search</h5>
