@@ -1,6 +1,7 @@
-import os.path
-
 from django.db import models
+from django.contrib.auth.models import User
+import os
+
 
 class Post(models.Model):
     title = models.CharField(max_length=30)
@@ -12,11 +13,16 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    author = models.ForeignKey(User, default=True, on_delete=models.CASCADE)
+
     def __str__(self):
         return f'[{self.pk}] {self.title}'
 
     def get_absolute_url(self):
         return f'/blog/{self.pk}'
+
+    def __str__(self):
+        return f'[{self.pk}]{self.title} :: {self.author}'
 
     # 첨부 파일명 반환
     def get_file_name(self):
