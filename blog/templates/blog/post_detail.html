@@ -63,7 +63,7 @@
         <!-- Author -->
         <p class="lead">
           by
-          <a href="#">{{ post.author }}</a>
+          <a href="#">{{ post.author}}</a>
         </p>
 
         <hr>
@@ -82,12 +82,20 @@
 
         <!-- Post Content -->
         <p>{{ post.content }}</p>
+          {% if post.file_upload %}
 
-        {% if post.file_upload %}
-          <a href="{{ post.file_upload.url }}" class="btn btn-outline-dark" role="button" download>Download</a>
-        {% endif %}
+          <a href="{{ post.file_upload.url }}" class="btn btn-outline-primary">첨부파일 다운로드</a>
+        {{ post.get_file_name }}
 
+       {% endif %}
         <hr>
+        {% if post.tag.exists %}
+            <i class = "fas fa-tags">
+            {% for tag in post.tag.iterator %}
+                <a href="{{ tag.get_absolute_url }}">{{ tag }} </a>
+            {% endfor %}
+            </i>
+        {% endif %}
 
         <!-- Comments Form -->
         <div class="card my-4">

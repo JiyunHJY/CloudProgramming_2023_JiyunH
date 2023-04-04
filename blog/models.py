@@ -1,7 +1,32 @@
-from django.db import models
-from django.contrib.auth.models import User
-import os
+import os.path
 
+from django.contrib.auth.models import User
+from django.db import models
+
+class Tag(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=50, unique=True, allow_unicode=True )
+
+
+    def get_absolute_url(self):
+        return f'/blog/tag/{self.slug}'
+
+    def __str__(self):
+        return self.name
+
+class Category(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=50, unique=True, allow_unicode=True )
+
+
+    def get_absolute_url(self):
+        return f'/blog/category/{self.slug}'
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 class Post(models.Model):
     title = models.CharField(max_length=30)
@@ -13,21 +38,15 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    author = models.ForeignKey(User, default=True, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
+    tag = models.ManyToManyField(Tag)
 
     def __str__(self):
-        return f'[{self.pk}] {self.title}'
+        return f'[{self.pk}] {self.title} - {self.author}'
 
     def get_absolute_url(self):
         return f'/blog/{self.pk}'
 
-    def __str__(self):
-        return f'[{self.pk}]{self.title} :: {self.author}'
-
-    # 첨부 파일명 반환
     def get_file_name(self):
         return os.path.basename(self.file_upload.name)
-
-    # 첨부 파일 확장자명 반환
-    def get_file_ext(self):
-        return self.get_file_name().split('.')[-1]
